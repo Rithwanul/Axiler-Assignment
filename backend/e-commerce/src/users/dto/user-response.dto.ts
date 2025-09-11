@@ -1,5 +1,6 @@
 // src/users/dto/user-response.dto.ts
-import { AddressDto } from './create-user.dto';
+
+import { AddressDto } from 'src/addresses/dto/address.dto';
 
 export class UserResponseDto {
   id: string;
