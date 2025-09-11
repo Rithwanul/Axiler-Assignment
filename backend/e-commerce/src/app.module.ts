@@ -16,7 +16,7 @@ import { UsersModule } from './users/users.module';
       password: process.env.POSTGRES_PASSWORD || 'postgres',
       database: process.env.POSTGRES_DB || 'assignment',
       entities: [User, Address],
-      synchronize: true, // disable in production
+      synchronize: true,
     }),
     UsersModule,
   ],

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+// src/users/dto/create-user.dto.ts
 import {
   IsEmail,
   IsNotEmpty,
@@ -6,6 +7,7 @@ import {
   MinLength,
   ValidateNested,
   IsEnum,
+  IsOptional,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { AddressType } from 'src/common/enums/address-type.enum';
@@ -13,15 +15,27 @@ import { AddressType } from 'src/common/enums/address-type.enum';
 export class AddressDto {
   @IsNotEmpty()
   @IsString()
-  street: string;
+  line1: string; // corrected to match entity
+
+  @IsOptional()
+  @IsString()
+  line2?: string;
 
   @IsNotEmpty()
   @IsString()
   city: string;
 
+  @IsOptional()
+  @IsString()
+  state?: string;
+
   @IsNotEmpty()
   @IsString()
   country: string;
+
+  @IsOptional()
+  @IsString()
+  zip?: string;
 
   @IsEnum(AddressType)
   type: AddressType;
@@ -38,7 +52,7 @@ export class CreateUserDto {
   @MinLength(6)
   password: string;
 
-  @ValidateNested({ each: true }) // ensures nested validation
-  @Type(() => AddressDto) // ensures transform into class instance
+  @ValidateNested({ each: true })
+  @Type(() => AddressDto)
   addresses: AddressDto[];
 }

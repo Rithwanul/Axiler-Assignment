@@ -27,16 +27,16 @@ export class Address {
   @Column({ nullable: true })
   line2: string;
 
-  @Column()
+  @Column({ nullable: false })
   city: string;
 
-  @Column()
+  @Column({ nullable: false })
   state: string;
 
-  @Column()
+  @Column({ nullable: false })
   country: string;
 
-  @Column()
+  @Column({ nullable: false })
   zip: string;
 
   @CreateDateColumn()
