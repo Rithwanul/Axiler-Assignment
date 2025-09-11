@@ -93,6 +93,24 @@ services:
       retries: 5
       start_period: 5s
 
+  # MongoDB
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodbdata:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --username root --password root --eval 'db.adminCommand(\"ping\")' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
   # Backend NestJS
   backend:
     build: ./backend/e-commerce
@@ -107,6 +125,8 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
+      mongo:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 10s
@@ -114,6 +134,20 @@ services:
       retries: 5
       start_period: 5s
     restart: on-failure
+
+  # Mongo Express (MongoDB GUI)
+  mongo-express:
+    image: mongo-express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_SERVER: mongo
+    ports:
+      - "8082:8081"
+    depends_on:
+      backend:
+        condition: service_healthy
 
   # Frontend Angular
   frontend:
@@ -128,3 +162,4 @@ services:
 volumes:
   pgdata:
   redisdata:
+  mongodbdata:
